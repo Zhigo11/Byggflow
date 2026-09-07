@@ -1,360 +1,286 @@
 <!doctype html>
 <html lang="sv">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#061a1d" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#061a1d">
   <title>ByggFlow</title>
   <style>
     :root{
-      --bg:#061a1d;
-      --panel:#0d262b;
-      --panel2:#102f35;
-      --text:#f3f6f7;
-      --muted:#9da8ac;
-      --line:#27474d;
-      --accent:#ffc23d;
-      --accentText:#241600;
-      --danger:#ff6b6b;
-      --ok:#4dd4a8;
+      --bg:#061a1d;--panel:#0d262b;--panel2:#102f35;--text:#f4f7f8;
+      --muted:#9ba8ac;--line:#294a51;--accent:#ffc23d;--danger:#ff6b6b;--ok:#4dd4a8;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-    body{padding-bottom:82px}
-    button,input,textarea,select{font:inherit}
-    button{cursor:pointer}
-    .topbar{position:sticky;top:0;z-index:20;background:rgba(6,26,29,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:18px 18px 16px}
-    .brand{font-weight:900;font-size:27px;letter-spacing:-1px}
-    .brand span{color:var(--accent)}
-    .subtitle{color:var(--muted);font-size:14px;margin-top:5px}
-    .wrap{max-width:760px;margin:0 auto;padding:22px 18px}
-    .login-wrap{max-width:580px;margin:18px auto 0}
-    h1{font-size:34px;margin:20px 0 8px}
-    h2{font-size:24px;margin:6px 0 14px}
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    body{padding-bottom:82px} button,input,textarea,select{font:inherit} button{cursor:pointer}
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(6,26,29,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:18px}
+    .brand{font-weight:900;font-size:28px;letter-spacing:-1px}.brand span{color:var(--accent)}
+    .subtitle{color:var(--muted);font-size:13px;margin-top:4px}
+    .wrap{max-width:820px;margin:auto;padding:22px 18px}.hidden{display:none!important}
+    h1{font-size:32px;margin:18px 0 7px}h2{font-size:22px;margin:0 0 12px}h3{margin:0 0 8px}
     p{color:var(--muted);line-height:1.5}
-    .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 14px 40px rgba(0,0,0,.18)}
-    label{display:block;color:var(--muted);font-size:14px;margin:12px 0 7px}
-    input,textarea,select{width:100%;background:#061d21;color:var(--text);border:1px solid #2a4d54;border-radius:14px;padding:14px 15px;outline:none}
-    input:focus,textarea:focus,select:focus{border-color:var(--accent)}
-    textarea{min-height:110px;resize:vertical}
-    .primary{width:100%;border:0;border-radius:14px;background:var(--accent);color:var(--accentText);font-weight:900;padding:15px;margin-top:14px}
-    .secondary{border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--text);font-weight:700;padding:11px 13px}
-    .danger{border-color:#633;color:#ffd6d6}
-    .msg{min-height:22px;margin-top:10px;font-size:14px}
-    .error{color:var(--danger)}
-    .success{color:var(--ok)}
-    .hidden{display:none !important}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .stat{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px}
-    .stat strong{display:block;font-size:24px;margin-top:6px}
-    .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 12px}
-    .section-title h2{margin:0}
-    .list{display:flex;flex-direction:column;gap:10px}
-    .item{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
-    .item-title{font-weight:800}
-    .item-meta{font-size:13px;color:var(--muted);margin-top:6px}
-    .badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:12px;color:#d7e0e3;margin-top:8px}
-    .row{display:flex;gap:10px;align-items:center}
-    .row > *{flex:1}
-    .screen{display:none}
-    .screen.active{display:block}
+    .card,.item{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:16px}
+    .card{margin-bottom:14px}.list{display:flex;flex-direction:column;gap:10px}
+    label{display:block;color:var(--muted);font-size:13px;margin:11px 0 6px}
+    input,textarea,select{width:100%;background:#061d21;color:var(--text);border:1px solid #2a4d54;border-radius:13px;padding:13px 14px;outline:none}
+    textarea{min-height:100px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+    .primary,.secondary,.dangerBtn{border-radius:13px;padding:13px 15px;font-weight:900}
+    .primary{width:100%;border:0;background:var(--accent);color:#241600;margin-top:13px}
+    .secondary{border:1px solid var(--line);background:transparent;color:var(--text)}
+    .dangerBtn{border:1px solid #6c3636;background:transparent;color:#ffd7d7}
+    .row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:20px 0 12px}
+    .section-title h1,.section-title h2{margin:0}.small{font-size:13px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}.stat strong{display:block;font-size:25px;margin-top:6px}
+    .badge{display:inline-block;margin-top:8px;padding:4px 8px;border-radius:999px;border:1px solid var(--line);font-size:12px}
+    .ok{color:var(--ok)}.warn{color:var(--accent)}.error{color:var(--danger)}
+    .screen{display:none}.screen.active{display:block}
     .bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#08191d;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-    .bottomnav-inner{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr)}
-    .navbtn{background:transparent;border:0;color:#bdc8cb;padding:10px 4px 12px;font-size:12px;font-weight:800}
-    .navbtn .ico{display:block;font-size:22px;margin-bottom:4px}
-    .navbtn.active{color:var(--accent)}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
-    .small{font-size:13px}
-    .empty{color:var(--muted);padding:14px 2px}
-    @media(min-width:700px){
-      .grid{grid-template-columns:repeat(4,1fr)}
-      .wrap{padding-top:28px}
-    }
+    .bottomnav-inner{max-width:820px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr)}
+    .navbtn{background:transparent;border:0;color:#bdc8cb;padding:10px 2px 12px;font-size:11px;font-weight:800}
+    .navbtn .ico{display:block;font-size:22px;margin-bottom:4px}.navbtn.active{color:var(--accent)}
+    .thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+    .thumb{aspect-ratio:1/1;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#082126}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .project-link{cursor:pointer}.project-link:active{transform:scale(.995)}
+    .project-detail-head{display:flex;justify-content:space-between;gap:10px;align-items:start}
+    .back{margin-bottom:12px}.empty{color:var(--muted);padding:12px 0}
+    @media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">BYGG<span>FLOW</span></div>
-    <div class="subtitle" id="headerSubtitle">Testversion • sparar lokalt på enheten</div>
-  </header>
+<header class="topbar">
+  <div class="brand">BYGG<span>FLOW</span></div>
+  <div class="subtitle">Steg 3 • Projekt, tidrapportering och bilder</div>
+</header>
 
-  <main class="wrap">
-    <section id="loginView" class="login-wrap">
-      <h1>Välkommen</h1>
-      <p>Logga in för att komma till ditt bygge.</p>
+<main class="wrap">
+  <section id="loginView">
+    <h1>Välkommen</h1>
+    <p>Logga in för att komma till ditt bygge.</p>
+    <div class="card">
+      <form id="loginForm">
+        <label>E-post</label><input id="email" type="email" value="demo@byggflow.se" required>
+        <label>Lösenord</label><input id="password" type="password" value="demo123" required>
+        <button class="primary">LOGGA IN</button>
+        <div id="loginMsg" class="small" style="margin-top:10px"></div>
+        <p class="small">Demo: demo@byggflow.se / demo123</p>
+      </form>
+    </div>
+  </section>
+
+  <section id="appView" class="hidden">
+    <section id="home" class="screen active">
+      <h1>Översikt</h1><p>Snabb koll på verksamheten.</p>
+      <div class="grid">
+        <div class="stat"><span class="small">Projekt</span><strong id="statProjects">0</strong></div>
+        <div class="stat"><span class="small">Öppna uppgifter</span><strong id="statTasks">0</strong></div>
+        <div class="stat"><span class="small">Timmar</span><strong id="statHours">0</strong></div>
+        <div class="stat"><span class="small">Bilder</span><strong id="statPhotos">0</strong></div>
+      </div>
+      <div class="section-title"><h2>Senaste projekt</h2></div>
+      <div id="homeProjects" class="list"></div>
+    </section>
+
+    <section id="projects" class="screen">
+      <div class="section-title"><h1>Projekt</h1><button class="secondary" id="newProjectBtn">+ Nytt</button></div>
+      <div id="projectForm" class="card hidden">
+        <h2>Nytt projekt</h2>
+        <label>Projektnamn</label><input id="projectName" placeholder="Villa Andersson">
+        <label>Adress</label><input id="projectAddress" placeholder="Björkvägen 12">
+        <label>Kund</label><input id="projectCustomer" placeholder="Anna Andersson">
+        <label>Telefon</label><input id="projectPhone" placeholder="070-123 45 67">
+        <button class="primary" id="saveProjectBtn">Spara projekt</button>
+      </div>
+      <div id="projectList" class="list"></div>
+    </section>
+
+    <section id="projectDetail" class="screen">
+      <button class="secondary back" id="backProjectsBtn">← Tillbaka</button>
+      <div id="projectDetailContent"></div>
+    </section>
+
+    <section id="tasks" class="screen">
+      <div class="section-title"><h1>Uppgifter</h1><button class="secondary" id="newTaskBtn">+ Ny</button></div>
+      <div id="taskForm" class="card hidden">
+        <label>Uppgift</label><input id="taskTitle" placeholder="Montera innervägg">
+        <label>Projekt</label><select id="taskProject"></select>
+        <label>Ansvarig</label><input id="taskOwner" placeholder="Namn">
+        <button class="primary" id="saveTaskBtn">Spara uppgift</button>
+      </div>
+      <div id="taskList" class="list"></div>
+    </section>
+
+    <section id="logs" class="screen">
+      <div class="section-title"><h1>Dagbok</h1><button class="secondary" id="newLogBtn">+ Nytt</button></div>
+      <div id="logForm" class="card hidden">
+        <label>Projekt</label><select id="logProject"></select>
+        <label>Vad har gjorts?</label><textarea id="logText" placeholder="Beskriv dagens arbete..."></textarea>
+        <button class="primary" id="saveLogBtn">Spara inlägg</button>
+      </div>
+      <div id="logList" class="list"></div>
+    </section>
+
+    <section id="more" class="screen">
+      <h1>Mer</h1>
       <div class="card">
-        <form id="loginForm">
-          <label for="email">E-post</label>
-          <input id="email" type="email" autocomplete="username" value="demo@byggflow.se" required />
-          <label for="password">Lösenord</label>
-          <input id="password" type="password" autocomplete="current-password" value="demo123" required />
-          <button class="primary" type="submit">LOGGA IN</button>
-          <div id="loginMsg" class="msg"></div>
-          <p class="small">Demo: demo@byggflow.se / demo123. Detta är en statisk testversion utan riktig serverinloggning.</p>
-        </form>
+        <h2>Tidrapportering</h2>
+        <label>Projekt</label><select id="timeProject"></select>
+        <div class="row">
+          <div><label>Datum</label><input id="timeDate" type="date"></div>
+          <div><label>Timmar</label><input id="timeHours" type="number" min="0" step="0.25" placeholder="8"></div>
+        </div>
+        <label>Person</label><input id="timePerson" placeholder="Namn">
+        <label>Kommentar</label><input id="timeNote" placeholder="T.ex. stomresning">
+        <button class="primary" id="saveTimeBtn">Spara tid</button>
+      </div>
+      <div class="section-title"><h2>Senaste tider</h2></div>
+      <div id="timeList" class="list"></div>
+
+      <div class="card" style="margin-top:18px">
+        <h2>Inställningar</h2>
+        <div class="toolbar">
+          <button class="secondary" id="seedBtn">Lägg in demo-data</button>
+          <button class="dangerBtn" id="clearBtn">Rensa data</button>
+          <button class="secondary" id="logoutBtn">Logga ut</button>
+        </div>
       </div>
     </section>
+  </section>
+</main>
 
-    <section id="appView" class="hidden">
-      <section id="home" class="screen active">
-        <h1>Översikt</h1>
-        <p>Snabb koll på projekten idag.</p>
-        <div class="grid">
-          <div class="stat"><span class="small">Aktiva projekt</span><strong id="statProjects">0</strong></div>
-          <div class="stat"><span class="small">Öppna uppgifter</span><strong id="statTasks">0</strong></div>
-          <div class="stat"><span class="small">Dagboksinlägg</span><strong id="statLogs">0</strong></div>
-          <div class="stat"><span class="small">Klart</span><strong id="statDone">0</strong></div>
-        </div>
-        <div class="section-title"><h2>Senaste projekt</h2></div>
-        <div id="homeProjects" class="list"></div>
-      </section>
-
-      <section id="projects" class="screen">
-        <div class="section-title"><h1>Projekt</h1><button class="secondary" id="newProjectBtn">+ Nytt</button></div>
-        <div id="projectForm" class="card hidden">
-          <h2>Nytt projekt</h2>
-          <label>Projektnamn</label><input id="projectName" placeholder="T.ex. Villa Andersson">
-          <label>Adress</label><input id="projectAddress" placeholder="Byggvägen 12">
-          <label>Kund</label><input id="projectCustomer" placeholder="Kundens namn">
-          <button class="primary" id="saveProjectBtn">Spara projekt</button>
-        </div>
-        <div id="projectList" class="list"></div>
-      </section>
-
-      <section id="tasks" class="screen">
-        <div class="section-title"><h1>Uppgifter</h1><button class="secondary" id="newTaskBtn">+ Ny</button></div>
-        <div id="taskForm" class="card hidden">
-          <h2>Ny uppgift</h2>
-          <label>Uppgift</label><input id="taskTitle" placeholder="T.ex. Montera innervägg">
-          <label>Projekt</label><select id="taskProject"></select>
-          <label>Ansvarig</label><input id="taskOwner" placeholder="Namn">
-          <button class="primary" id="saveTaskBtn">Spara uppgift</button>
-        </div>
-        <div id="taskList" class="list"></div>
-      </section>
-
-      <section id="logs" class="screen">
-        <div class="section-title"><h1>Dagbok</h1><button class="secondary" id="newLogBtn">+ Nytt</button></div>
-        <div id="logForm" class="card hidden">
-          <h2>Nytt dagboksinlägg</h2>
-          <label>Projekt</label><select id="logProject"></select>
-          <label>Vad har gjorts?</label><textarea id="logText" placeholder="Beskriv dagens arbete..."></textarea>
-          <button class="primary" id="saveLogBtn">Spara inlägg</button>
-        </div>
-        <div id="logList" class="list"></div>
-      </section>
-
-      <section id="more" class="screen">
-        <h1>Mer</h1>
-        <div class="card">
-          <h2>Testversion</h2>
-          <p>ByggFlow sparar just nu projekt, uppgifter och dagbok lokalt på den här enheten.</p>
-          <div class="toolbar">
-            <button class="secondary" id="seedBtn">Lägg in demo-data</button>
-            <button class="secondary danger" id="clearBtn">Rensa data</button>
-            <button class="secondary" id="logoutBtn">Logga ut</button>
-          </div>
-        </div>
-      </section>
-    </section>
-  </main>
-
-  <nav id="bottomNav" class="bottomnav hidden">
-    <div class="bottomnav-inner">
-      <button class="navbtn active" data-screen="home"><span class="ico">⌂</span>Hem</button>
-      <button class="navbtn" data-screen="projects"><span class="ico">▣</span>Projekt</button>
-      <button class="navbtn" data-screen="tasks"><span class="ico">✓</span>Uppgifter</button>
-      <button class="navbtn" data-screen="logs"><span class="ico">✎</span>Dagbok</button>
-      <button class="navbtn" data-screen="more"><span class="ico">•••</span>Mer</button>
-    </div>
-  </nav>
+<nav id="bottomNav" class="bottomnav hidden">
+  <div class="bottomnav-inner">
+    <button class="navbtn active" data-screen="home"><span class="ico">⌂</span>Hem</button>
+    <button class="navbtn" data-screen="projects"><span class="ico">▣</span>Projekt</button>
+    <button class="navbtn" data-screen="tasks"><span class="ico">✓</span>Uppgifter</button>
+    <button class="navbtn" data-screen="logs"><span class="ico">✎</span>Dagbok</button>
+    <button class="navbtn" data-screen="more"><span class="ico">•••</span>Mer</button>
+  </div>
+</nav>
 
 <script>
-(() => {
-  const DEMO_EMAIL = "demo@byggflow.se";
-  const DEMO_PASSWORD = "demo123";
+(()=>{
+const $=id=>document.getElementById(id);
+const load=(k)=>JSON.parse(localStorage.getItem(k)||"[]");
+const state={projects:load("bf_projects"),tasks:load("bf_tasks"),logs:load("bf_logs"),times:load("bf_times"),photos:load("bf_photos")};
+let currentProjectId=null;
+const save=()=>{localStorage.setItem("bf_projects",JSON.stringify(state.projects));localStorage.setItem("bf_tasks",JSON.stringify(state.tasks));localStorage.setItem("bf_logs",JSON.stringify(state.logs));localStorage.setItem("bf_times",JSON.stringify(state.times));localStorage.setItem("bf_photos",JSON.stringify(state.photos));};
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const pname=id=>state.projects.find(p=>p.id===id)?.name||"Inget projekt valt";
+const fmtHours=n=>(Math.round(n*100)/100).toString().replace(".",",");
 
-  const $ = (id) => document.getElementById(id);
-  const state = {
-    projects: JSON.parse(localStorage.getItem("byggflow_projects") || "[]"),
-    tasks: JSON.parse(localStorage.getItem("byggflow_tasks") || "[]"),
-    logs: JSON.parse(localStorage.getItem("byggflow_logs") || "[]")
-  };
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  $(id).classList.add("active");
+  document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));
+  scrollTo({top:0,behavior:"smooth"});
+}
+function showApp(){$("loginView").classList.add("hidden");$("appView").classList.remove("hidden");$("bottomNav").classList.remove("hidden");renderAll();}
+function showLogin(){$("loginView").classList.remove("hidden");$("appView").classList.add("hidden");$("bottomNav").classList.add("hidden");}
+$("loginForm").onsubmit=e=>{e.preventDefault();if($("email").value.trim().toLowerCase()==="demo@byggflow.se"&&$("password").value==="demo123"){sessionStorage.setItem("bf_login","1");showApp()}else{$("loginMsg").textContent="Fel e-post eller lösenord."; $("loginMsg").className="small error";}};
+document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>showScreen(b.dataset.screen));
 
-  function save(){
-    localStorage.setItem("byggflow_projects", JSON.stringify(state.projects));
-    localStorage.setItem("byggflow_tasks", JSON.stringify(state.tasks));
-    localStorage.setItem("byggflow_logs", JSON.stringify(state.logs));
-  }
+$("newProjectBtn").onclick=()=>$("projectForm").classList.toggle("hidden");
+$("newTaskBtn").onclick=()=>$("taskForm").classList.toggle("hidden");
+$("newLogBtn").onclick=()=>$("logForm").classList.toggle("hidden");
 
-  function esc(s){
-    return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-  }
+$("saveProjectBtn").onclick=()=>{
+ const name=$("projectName").value.trim(); if(!name)return alert("Skriv ett projektnamn.");
+ state.projects.unshift({id:Date.now(),name,address:$("projectAddress").value.trim(),customer:$("projectCustomer").value.trim(),phone:$("projectPhone").value.trim()});
+ ["projectName","projectAddress","projectCustomer","projectPhone"].forEach(id=>$(id).value="");
+ $("projectForm").classList.add("hidden");save();renderAll();
+};
 
-  function showApp(){
-    $("loginView").classList.add("hidden");
-    $("appView").classList.remove("hidden");
-    $("bottomNav").classList.remove("hidden");
-    $("headerSubtitle").textContent = "Testversion • sparar lokalt på enheten";
-    renderAll();
-  }
+$("saveTaskBtn").onclick=()=>{
+ const title=$("taskTitle").value.trim(); if(!title)return alert("Skriv en uppgift.");
+ state.tasks.unshift({id:Date.now(),title,projectId:Number($("taskProject").value||0),owner:$("taskOwner").value.trim(),done:false});
+ $("taskTitle").value="";$("taskOwner").value="";$("taskForm").classList.add("hidden");save();renderAll();
+};
 
-  function showLogin(){
-    $("appView").classList.add("hidden");
-    $("bottomNav").classList.add("hidden");
-    $("loginView").classList.remove("hidden");
-    $("headerSubtitle").textContent = "Testversion • sparar lokalt på enheten";
-  }
+$("saveLogBtn").onclick=()=>{
+ const text=$("logText").value.trim(); if(!text)return alert("Skriv vad som har gjorts.");
+ state.logs.unshift({id:Date.now(),projectId:Number($("logProject").value||0),text,date:new Date().toLocaleDateString("sv-SE")});
+ $("logText").value="";$("logForm").classList.add("hidden");save();renderAll();
+};
 
-  $("loginForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = $("email").value.trim().toLowerCase();
-    const password = $("password").value;
-    if(email === DEMO_EMAIL && password === DEMO_PASSWORD){
-      sessionStorage.setItem("byggflow_logged_in", "1");
-      $("loginMsg").textContent = "Inloggning lyckades.";
-      $("loginMsg").className = "msg success";
-      showApp();
-    } else {
-      $("loginMsg").textContent = "Fel e-post eller lösenord. Använd demo@byggflow.se / demo123";
-      $("loginMsg").className = "msg error";
-    }
-  });
+$("saveTimeBtn").onclick=()=>{
+ const h=Number($("timeHours").value); if(!h||h<=0)return alert("Skriv antal timmar.");
+ state.times.unshift({id:Date.now(),projectId:Number($("timeProject").value||0),date:$("timeDate").value||new Date().toISOString().slice(0,10),hours:h,person:$("timePerson").value.trim(),note:$("timeNote").value.trim()});
+ $("timeHours").value="";$("timeNote").value="";save();renderAll();
+};
 
-  document.querySelectorAll(".navbtn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-      $(btn.dataset.screen).classList.add("active");
-      window.scrollTo({top:0, behavior:"smooth"});
-    });
-  });
+window.toggleTask=id=>{const t=state.tasks.find(x=>x.id===id);if(t){t.done=!t.done;save();renderAll();if(currentProjectId)renderProjectDetail(currentProjectId);}};
+window.openProject=id=>{currentProjectId=id;renderProjectDetail(id);showScreen("projectDetail");};
+$("backProjectsBtn").onclick=()=>showScreen("projects");
 
-  $("newProjectBtn").onclick = () => $("projectForm").classList.toggle("hidden");
-  $("newTaskBtn").onclick = () => $("taskForm").classList.toggle("hidden");
-  $("newLogBtn").onclick = () => $("logForm").classList.toggle("hidden");
+function renderProjectDetail(id){
+ const p=state.projects.find(x=>x.id===id); if(!p)return;
+ const tasks=state.tasks.filter(x=>x.projectId===id),logs=state.logs.filter(x=>x.projectId===id),times=state.times.filter(x=>x.projectId===id),photos=state.photos.filter(x=>x.projectId===id);
+ const total=times.reduce((a,b)=>a+Number(b.hours||0),0);
+ $("projectDetailContent").innerHTML=`
+ <div class="card">
+   <div class="project-detail-head"><div><h1>${esc(p.name)}</h1><div class="small">${esc(p.address||"Ingen adress")}</div></div><span class="badge">${fmtHours(total)} h</span></div>
+   <p><b>Kund:</b> ${esc(p.customer||"-")}<br><b>Telefon:</b> ${esc(p.phone||"-")}</p>
+ </div>
+ <div class="grid">
+   <div class="stat"><span class="small">Uppgifter</span><strong>${tasks.length}</strong></div>
+   <div class="stat"><span class="small">Klart</span><strong>${tasks.filter(t=>t.done).length}</strong></div>
+   <div class="stat"><span class="small">Timmar</span><strong>${fmtHours(total)}</strong></div>
+   <div class="stat"><span class="small">Bilder</span><strong>${photos.length}</strong></div>
+ </div>
+ <div class="card" style="margin-top:14px">
+   <h2>Lägg till bild</h2>
+   <input id="photoInput" type="file" accept="image/*" capture="environment">
+   <p class="small">Bilden sparas lokalt i testversionen.</p>
+   <div class="thumbs">${photos.map(ph=>`<div class="thumb"><img src="${ph.data}" alt="Projektbild"></div>`).join("")}</div>
+ </div>
+ <div class="section-title"><h2>Projektets uppgifter</h2></div>
+ <div class="list">${tasks.length?tasks.map(t=>`<div class="item"><div class="row"><div><h3>${esc(t.title)}</h3><div class="small">${esc(t.owner||"Ej tilldelad")}</div></div><button class="secondary" onclick="toggleTask(${t.id})">${t.done?"Ångra":"Klart"}</button></div></div>`).join(""):'<div class="empty">Inga uppgifter.</div>'}</div>
+ <div class="section-title"><h2>Dagbok</h2></div>
+ <div class="list">${logs.length?logs.map(l=>`<div class="item"><div class="small">${esc(l.date)}</div><p>${esc(l.text)}</p></div>`).join(""):'<div class="empty">Inga dagboksinlägg.</div>'}</div>`;
+ const inp=$("photoInput");
+ inp.onchange=e=>{
+   const file=e.target.files[0]; if(!file)return;
+   if(file.size>1200000){alert("Välj en mindre bild än cirka 1,2 MB i denna testversion.");return;}
+   const r=new FileReader();
+   r.onload=()=>{state.photos.unshift({id:Date.now(),projectId:id,data:r.result});save();renderAll();renderProjectDetail(id);};
+   r.readAsDataURL(file);
+ };
+}
 
-  $("saveProjectBtn").onclick = () => {
-    const name = $("projectName").value.trim();
-    if(!name) return alert("Skriv ett projektnamn.");
-    state.projects.unshift({
-      id: Date.now(),
-      name,
-      address: $("projectAddress").value.trim(),
-      customer: $("projectCustomer").value.trim()
-    });
-    $("projectName").value = ""; $("projectAddress").value = ""; $("projectCustomer").value = "";
-    $("projectForm").classList.add("hidden");
-    save(); renderAll();
-  };
+function renderAll(){
+ const opts='<option value="0">Välj projekt</option>'+state.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
+ ["taskProject","logProject","timeProject"].forEach(id=>$(id).innerHTML=opts);
+ $("timeDate").value=$("timeDate").value||new Date().toISOString().slice(0,10);
+ $("statProjects").textContent=state.projects.length;
+ $("statTasks").textContent=state.tasks.filter(t=>!t.done).length;
+ $("statHours").textContent=fmtHours(state.times.reduce((a,b)=>a+Number(b.hours||0),0));
+ $("statPhotos").textContent=state.photos.length;
 
-  $("saveTaskBtn").onclick = () => {
-    const title = $("taskTitle").value.trim();
-    if(!title) return alert("Skriv en uppgift.");
-    state.tasks.unshift({
-      id: Date.now(),
-      title,
-      projectId: Number($("taskProject").value || 0),
-      owner: $("taskOwner").value.trim(),
-      done: false
-    });
-    $("taskTitle").value = ""; $("taskOwner").value = "";
-    $("taskForm").classList.add("hidden");
-    save(); renderAll();
-  };
+ const projectHtml=state.projects.length?state.projects.map(p=>`<div class="item project-link" onclick="openProject(${p.id})"><h3>${esc(p.name)}</h3><div class="small">${esc(p.address||"Ingen adress")} • ${esc(p.customer||"Ingen kund")}</div><span class="badge">Öppna projekt</span></div>`).join(""):'<div class="empty">Inga projekt ännu.</div>';
+ $("projectList").innerHTML=projectHtml;
+ $("homeProjects").innerHTML=state.projects.length?state.projects.slice(0,3).map(p=>`<div class="item project-link" onclick="openProject(${p.id})"><h3>${esc(p.name)}</h3><div class="small">${esc(p.address||"Ingen adress")}</div></div>`).join(""):'<div class="empty">Skapa ditt första projekt.</div>';
 
-  $("saveLogBtn").onclick = () => {
-    const text = $("logText").value.trim();
-    if(!text) return alert("Skriv vad som har gjorts.");
-    state.logs.unshift({
-      id: Date.now(),
-      projectId: Number($("logProject").value || 0),
-      text,
-      date: new Date().toLocaleDateString("sv-SE")
-    });
-    $("logText").value = "";
-    $("logForm").classList.add("hidden");
-    save(); renderAll();
-  };
+ $("taskList").innerHTML=state.tasks.length?state.tasks.map(t=>`<div class="item"><div class="row"><div><h3>${esc(t.title)}</h3><div class="small">${esc(pname(t.projectId))}${t.owner?" • "+esc(t.owner):""}</div><span class="badge">${t.done?"Klar":"Öppen"}</span></div><button class="secondary" onclick="toggleTask(${t.id})">${t.done?"Ångra":"Klart"}</button></div></div>`).join(""):'<div class="empty">Inga uppgifter ännu.</div>';
 
-  function projectName(id){
-    return state.projects.find(p => p.id === id)?.name || "Inget projekt valt";
-  }
+ $("logList").innerHTML=state.logs.length?state.logs.map(l=>`<div class="item"><h3>${esc(pname(l.projectId))}</h3><div class="small">${esc(l.date)}</div><p>${esc(l.text)}</p></div>`).join(""):'<div class="empty">Inga dagboksinlägg ännu.</div>';
 
-  function renderAll(){
-    $("statProjects").textContent = state.projects.length;
-    $("statTasks").textContent = state.tasks.filter(t => !t.done).length;
-    $("statLogs").textContent = state.logs.length;
-    $("statDone").textContent = state.tasks.filter(t => t.done).length;
+ $("timeList").innerHTML=state.times.length?state.times.slice(0,20).map(t=>`<div class="item"><div class="row"><div><h3>${esc(t.person||"Okänd")}</h3><div class="small">${esc(pname(t.projectId))} • ${esc(t.date)}${t.note?" • "+esc(t.note):""}</div></div><span class="badge">${fmtHours(Number(t.hours))} h</span></div></div>`).join(""):'<div class="empty">Ingen tid rapporterad ännu.</div>';
+}
 
-    const projectOptions = '<option value="0">Välj projekt</option>' +
-      state.projects.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join("");
-    $("taskProject").innerHTML = projectOptions;
-    $("logProject").innerHTML = projectOptions;
+$("seedBtn").onclick=()=>{
+ const id=Date.now();
+ state.projects.unshift({id,name:"Villa Andersson",address:"Björkvägen 12",customer:"Anna Andersson",phone:"070-123 45 67"});
+ state.tasks.unshift({id:id+1,title:"Montera innervägg",projectId:id,owner:"Johan",done:false});
+ state.logs.unshift({id:id+2,projectId:id,text:"Regling påbörjad och material levererat.",date:new Date().toLocaleDateString("sv-SE")});
+ state.times.unshift({id:id+3,projectId:id,date:new Date().toISOString().slice(0,10),hours:8,person:"Johan",note:"Regling"});
+ save();renderAll();
+};
+$("clearBtn").onclick=()=>{if(confirm("Rensa all lokal ByggFlow-data?")){state.projects=[];state.tasks=[];state.logs=[];state.times=[];state.photos=[];save();renderAll();}};
+$("logoutBtn").onclick=()=>{sessionStorage.removeItem("bf_login");showLogin();};
 
-    $("projectList").innerHTML = state.projects.length ? state.projects.map(p => `
-      <div class="item">
-        <div class="item-title">${esc(p.name)}</div>
-        <div class="item-meta">${esc(p.address || "Ingen adress")} • ${esc(p.customer || "Ingen kund")}</div>
-      </div>`).join("") : '<div class="empty">Inga projekt ännu.</div>';
-
-    $("homeProjects").innerHTML = state.projects.length ? state.projects.slice(0,3).map(p => `
-      <div class="item"><div class="item-title">${esc(p.name)}</div><div class="item-meta">${esc(p.address || "Ingen adress")}</div></div>
-    `).join("") : '<div class="empty">Skapa ditt första projekt under Projekt.</div>';
-
-    $("taskList").innerHTML = state.tasks.length ? state.tasks.map(t => `
-      <div class="item">
-        <div class="row">
-          <div>
-            <div class="item-title">${esc(t.title)}</div>
-            <div class="item-meta">${esc(projectName(t.projectId))}${t.owner ? " • " + esc(t.owner) : ""}</div>
-            <span class="badge">${t.done ? "Klar" : "Öppen"}</span>
-          </div>
-          <button class="secondary" onclick="window.toggleTask(${t.id})">${t.done ? "Ångra" : "Klart"}</button>
-        </div>
-      </div>`).join("") : '<div class="empty">Inga uppgifter ännu.</div>';
-
-    $("logList").innerHTML = state.logs.length ? state.logs.map(l => `
-      <div class="item">
-        <div class="item-title">${esc(projectName(l.projectId))}</div>
-        <div class="item-meta">${esc(l.date)}</div>
-        <p>${esc(l.text)}</p>
-      </div>`).join("") : '<div class="empty">Inga dagboksinlägg ännu.</div>';
-  }
-
-  window.toggleTask = (id) => {
-    const t = state.tasks.find(x => x.id === id);
-    if(t){ t.done = !t.done; save(); renderAll(); }
-  };
-
-  $("seedBtn").onclick = () => {
-    if(state.projects.length || state.tasks.length || state.logs.length){
-      if(!confirm("Det finns redan data. Vill du lägga till demo-data ändå?")) return;
-    }
-    const pid = Date.now();
-    state.projects.unshift({id:pid, name:"Villa Andersson", address:"Björkvägen 12", customer:"Anna Andersson"});
-    state.tasks.unshift(
-      {id:pid+1,title:"Montera innervägg",projectId:pid,owner:"Johan",done:false},
-      {id:pid+2,title:"Kontrollera materialleverans",projectId:pid,owner:"Mikael",done:true}
-    );
-    state.logs.unshift({id:pid+3,projectId:pid,text:"Regling påbörjad i vardagsrum. Material levererat enligt plan.",date:new Date().toLocaleDateString("sv-SE")});
-    save(); renderAll();
-  };
-
-  $("clearBtn").onclick = () => {
-    if(confirm("Vill du rensa all lokal ByggFlow-data?")){
-      state.projects=[]; state.tasks=[]; state.logs=[]; save(); renderAll();
-    }
-  };
-
-  $("logoutBtn").onclick = () => {
-    sessionStorage.removeItem("byggflow_logged_in");
-    showLogin();
-  };
-
-  if(sessionStorage.getItem("byggflow_logged_in") === "1") showApp();
-  else showLogin();
+if(sessionStorage.getItem("bf_login")==="1")showApp();else showLogin();
 })();
 </script>
 </body>
