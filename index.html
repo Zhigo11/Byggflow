@@ -42,7 +42,12 @@
 <div id="projectForm" class="card hidden"><label>Projektnamn</label><input id="projectName"><label>Adress</label><input id="projectAddress"><label>Kund</label><input id="projectCustomer"><label>Telefon</label><input id="projectPhone"><button class="primary" id="saveProjectBtn">Spara projekt</button></div><div id="projectList" class="list"></div></section>
 
 <section id="projectDetail" class="screen"><button class="secondary back" id="backProjectsBtn">← Tillbaka</button><div id="projectDetailContent"></div></section>
-
+<div class="card">
+  <h2>Projektbilder</h2>
+  <input id="projectImageInput" type="file" accept="image/*">
+  <button class="primary" id="uploadImageBtn" type="button">📷 LADDA UPP BILD</button>
+  <p id="imageMsg" class="small"></p>
+</div>
 <section id="tasks" class="screen"><div class="section-title"><h1>Uppgifter</h1><button class="secondary" id="newTaskBtn">+ Ny</button></div>
 <div id="taskForm" class="card hidden"><label>Uppgift</label><input id="taskTitle"><label>Projekt</label><select id="taskProject"></select><label>Ansvarig</label><input id="taskOwner"><button class="primary" id="saveTaskBtn">Spara uppgift</button></div><div id="taskList" class="list"></div></section>
 
@@ -111,6 +116,28 @@ async function uploadProjectImage(file, projectId) {
 
   return data.publicUrl;
 }
+uploadImageBtn.onclick = async () => {
+  const file = projectImageInput.files[0];
+
+  if (!file) {
+    alert("Välj en bild först.");
+    return;
+  }
+
+  if (!currentProjectId) {
+    alert("Inget projekt är valt.");
+    return;
+  }
+
+  imageMsg.textContent = "Laddar upp...";
+
+  const url = await uploadProjectImage(file, currentProjectId);
+
+  if (url) {
+    imageMsg.textContent = "Bilden är uppladdad ✓";
+    projectImageInput.value = "";
+  }
+};
 </script>
 </body>
 </html>
