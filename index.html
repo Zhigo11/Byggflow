@@ -3,345 +3,359 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#071518" />
+  <meta name="theme-color" content="#061a1d" />
   <title>ByggFlow</title>
   <style>
     :root{
-      --bg:#061316; --panel:#0c1d22; --panel2:#10262c; --line:#274048;
-      --text:#f4f7f8; --muted:#93a5aa; --accent:#ffc43d; --danger:#ff6b6b;
-      --ok:#38d39f; --shadow:0 12px 32px rgba(0,0,0,.22);
+      --bg:#061a1d;
+      --panel:#0d262b;
+      --panel2:#102f35;
+      --text:#f3f6f7;
+      --muted:#9da8ac;
+      --line:#27474d;
+      --accent:#ffc23d;
+      --accentText:#241600;
+      --danger:#ff6b6b;
+      --ok:#4dd4a8;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    body{padding-bottom:82px}
     button,input,textarea,select{font:inherit}
     button{cursor:pointer}
-    .app{max-width:760px;margin:0 auto;min-height:100vh;padding-bottom:88px}
-    .topbar{position:sticky;top:0;z-index:20;background:rgba(6,19,22,.96);backdrop-filter:blur(10px);padding:18px 18px 12px;border-bottom:1px solid rgba(255,255,255,.05)}
-    .brand{font-weight:900;font-size:25px;letter-spacing:-.8px}.brand span{color:var(--accent)}
-    .sub{color:var(--muted);font-size:13px;margin-top:3px}
-    .screen{display:none;padding:18px}.screen.active{display:block}
-    .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
-    h1,h2,h3,p{margin-top:0} h1{font-size:27px;margin-bottom:7px} h2{font-size:19px;margin-bottom:12px} h3{font-size:16px}
-    .muted{color:var(--muted)}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .stat{padding:16px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
-    .stat b{display:block;font-size:25px;margin-top:4px}
-    .btn{border:0;border-radius:13px;padding:13px 16px;font-weight:800;background:var(--accent);color:#111;min-height:48px}
-    .btn.secondary{background:#183038;color:var(--text);border:1px solid var(--line)}
-    .btn.danger{background:#3a1d21;color:#ffd8d8;border:1px solid #6a2c34}
-    .btn.small{padding:9px 11px;min-height:auto;border-radius:10px;font-size:13px}
-    .row{display:flex;gap:10px;align-items:center}.row.between{justify-content:space-between}.row.wrap{flex-wrap:wrap}
-    .stack{display:grid;gap:10px}
-    input,textarea,select{width:100%;background:#08191d;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px 14px;outline:none}
-    textarea{min-height:110px;resize:vertical}
+    .topbar{position:sticky;top:0;z-index:20;background:rgba(6,26,29,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:18px 18px 16px}
+    .brand{font-weight:900;font-size:27px;letter-spacing:-1px}
+    .brand span{color:var(--accent)}
+    .subtitle{color:var(--muted);font-size:14px;margin-top:5px}
+    .wrap{max-width:760px;margin:0 auto;padding:22px 18px}
+    .login-wrap{max-width:580px;margin:18px auto 0}
+    h1{font-size:34px;margin:20px 0 8px}
+    h2{font-size:24px;margin:6px 0 14px}
+    p{color:var(--muted);line-height:1.5}
+    .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 14px 40px rgba(0,0,0,.18)}
+    label{display:block;color:var(--muted);font-size:14px;margin:12px 0 7px}
+    input,textarea,select{width:100%;background:#061d21;color:var(--text);border:1px solid #2a4d54;border-radius:14px;padding:14px 15px;outline:none}
     input:focus,textarea:focus,select:focus{border-color:var(--accent)}
-    label{font-size:13px;color:var(--muted);display:grid;gap:7px}
-    .project{padding:15px;border-radius:16px;border:1px solid var(--line);background:#0a1a1f}
-    .project h3{margin-bottom:5px}.pill{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;background:#183038;color:#cfe0e4}
-    .pill.ok{background:#123128;color:#a9f0d6}.pill.warn{background:#3a2d12;color:#ffe19a}.pill.bad{background:#3a1c20;color:#ffc2c2}
-    .item{padding:13px 0;border-top:1px solid rgba(255,255,255,.08)} .item:first-child{border-top:0}
-    .empty{text-align:center;padding:26px 12px;color:var(--muted)}
-    .fab{position:fixed;right:max(18px,calc((100vw - 760px)/2 + 18px));bottom:88px;width:58px;height:58px;border-radius:50%;border:0;background:var(--accent);font-size:28px;font-weight:900;box-shadow:0 10px 25px rgba(0,0,0,.35)}
-    .bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(760px,100%);background:#08171b;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:30;padding-bottom:env(safe-area-inset-bottom)}
-    .nav{border:0;background:transparent;color:#c4d0d3;padding:12px 4px 10px;font-size:11px;font-weight:750;display:grid;gap:4px;justify-items:center}
-    .nav .ico{font-size:20px}.nav.active{color:var(--accent)}
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:50;display:none;align-items:flex-end;justify-content:center}
-    .modal.open{display:flex}.sheet{width:min(760px,100%);max-height:88vh;overflow:auto;background:#0b1c21;border:1px solid var(--line);border-radius:22px 22px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom))}
-    .login{min-height:calc(100vh - 68px);display:grid;align-content:start;padding-top:36px}
-    .loginbox{max-width:520px;margin:0 auto;width:100%}
-    .note{font-size:12px;color:var(--muted);line-height:1.5}
-    .taskdone{text-decoration:line-through;opacity:.55}
-    .filebox{border:1px dashed #41616a;border-radius:14px;padding:15px;text-align:center}
-    @media(min-width:700px){.grid.three{grid-template-columns:repeat(3,1fr)}}
+    textarea{min-height:110px;resize:vertical}
+    .primary{width:100%;border:0;border-radius:14px;background:var(--accent);color:var(--accentText);font-weight:900;padding:15px;margin-top:14px}
+    .secondary{border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--text);font-weight:700;padding:11px 13px}
+    .danger{border-color:#633;color:#ffd6d6}
+    .msg{min-height:22px;margin-top:10px;font-size:14px}
+    .error{color:var(--danger)}
+    .success{color:var(--ok)}
+    .hidden{display:none !important}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .stat{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px}
+    .stat strong{display:block;font-size:24px;margin-top:6px}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 12px}
+    .section-title h2{margin:0}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .item{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+    .item-title{font-weight:800}
+    .item-meta{font-size:13px;color:var(--muted);margin-top:6px}
+    .badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:12px;color:#d7e0e3;margin-top:8px}
+    .row{display:flex;gap:10px;align-items:center}
+    .row > *{flex:1}
+    .screen{display:none}
+    .screen.active{display:block}
+    .bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#08191d;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+    .bottomnav-inner{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr)}
+    .navbtn{background:transparent;border:0;color:#bdc8cb;padding:10px 4px 12px;font-size:12px;font-weight:800}
+    .navbtn .ico{display:block;font-size:22px;margin-bottom:4px}
+    .navbtn.active{color:var(--accent)}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+    .small{font-size:13px}
+    .empty{color:var(--muted);padding:14px 2px}
+    @media(min-width:700px){
+      .grid{grid-template-columns:repeat(4,1fr)}
+      .wrap{padding-top:28px}
+    }
   </style>
 </head>
 <body>
-<div class="app">
   <header class="topbar">
     <div class="brand">BYGG<span>FLOW</span></div>
-    <div class="sub" id="headerSub">Testversion • sparar lokalt på enheten</div>
+    <div class="subtitle" id="headerSubtitle">Testversion • sparar lokalt på enheten</div>
   </header>
 
-  <main>
-    <section id="login" class="screen active login">
-      <div class="loginbox">
-        <h1>Välkommen</h1>
-        <p class="muted">Logga in för att komma till ditt bygge.</p>
-        <form class="card stack" id="loginForm">
-          <label>E-post<input id="loginEmail" type="email" value="demo@byggflow.se" autocomplete="username"></label>
-          <label>Lösenord<input id="loginPass" type="password" value="demo123" autocomplete="current-password"></label>
-          <button class="btn" type="submit">LOGGA IN</button>
-          <div class="note">Demo: demo@byggflow.se / demo123. Detta är en statisk testversion utan riktig serverinloggning.</div>
+  <main class="wrap">
+    <section id="loginView" class="login-wrap">
+      <h1>Välkommen</h1>
+      <p>Logga in för att komma till ditt bygge.</p>
+      <div class="card">
+        <form id="loginForm">
+          <label for="email">E-post</label>
+          <input id="email" type="email" autocomplete="username" value="demo@byggflow.se" required />
+          <label for="password">Lösenord</label>
+          <input id="password" type="password" autocomplete="current-password" value="demo123" required />
+          <button class="primary" type="submit">LOGGA IN</button>
+          <div id="loginMsg" class="msg"></div>
+          <p class="small">Demo: demo@byggflow.se / demo123. Detta är en statisk testversion utan riktig serverinloggning.</p>
         </form>
       </div>
     </section>
 
-    <section id="home" class="screen">
-      <h1>Översikt</h1>
-      <p class="muted">Snabb koll på dagens byggflöde.</p>
-      <div class="grid three">
-        <div class="stat"><span class="muted">Projekt</span><b id="statProjects">0</b></div>
-        <div class="stat"><span class="muted">Öppna uppgifter</span><b id="statTasks">0</b></div>
-        <div class="stat"><span class="muted">Avvikelser</span><b id="statDeviations">0</b></div>
-      </div>
-      <div class="card" style="margin-top:14px">
-        <div class="row between"><h2>Aktiva projekt</h2><button class="btn small" onclick="openModal('projectModal')">+ Nytt</button></div>
-        <div id="homeProjects"></div>
-      </div>
-      <div class="card">
-        <h2>Nästa uppgifter</h2>
-        <div id="homeTasks"></div>
-      </div>
-    </section>
-
-    <section id="projects" class="screen">
-      <div class="row between"><div><h1>Projekt</h1><p class="muted">Alla dina byggprojekt.</p></div><button class="btn small" onclick="openModal('projectModal')">+ Projekt</button></div>
-      <div id="projectList" class="stack"></div>
-    </section>
-
-    <section id="tasks" class="screen">
-      <div class="row between"><div><h1>Uppgifter</h1><p class="muted">Planera och bocka av arbetet.</p></div><button class="btn small" onclick="openModal('taskModal')">+ Uppgift</button></div>
-      <div class="card"><div id="taskList"></div></div>
-    </section>
-
-    <section id="diary" class="screen">
-      <div class="row between"><div><h1>Dagbok</h1><p class="muted">Anteckningar från arbetsdagen.</p></div><button class="btn small" onclick="openModal('diaryModal')">+ Inlägg</button></div>
-      <div id="diaryList" class="stack"></div>
-    </section>
-
-    <section id="more" class="screen">
-      <h1>Mer</h1>
-      <div class="card">
-        <h2>Avvikelser</h2>
-        <div class="row between"><span class="muted">Registrera fel, hinder eller tillbud.</span><button class="btn small" onclick="openModal('devModal')">+ Ny</button></div>
-        <div id="devList"></div>
-      </div>
-      <div class="card">
-        <h2>Dokument & bilder</h2>
-        <div class="filebox">
-          <input id="fileInput" type="file" multiple accept="image/*,.pdf,.doc,.docx" style="margin-bottom:10px">
-          <button class="btn secondary" onclick="saveFiles()">Spara filnamn i projektet</button>
-          <p class="note" style="margin-top:10px">I testversionen sparas bara filnamn lokalt. Riktiga filer kräver molnlagring/backend.</p>
+    <section id="appView" class="hidden">
+      <section id="home" class="screen active">
+        <h1>Översikt</h1>
+        <p>Snabb koll på projekten idag.</p>
+        <div class="grid">
+          <div class="stat"><span class="small">Aktiva projekt</span><strong id="statProjects">0</strong></div>
+          <div class="stat"><span class="small">Öppna uppgifter</span><strong id="statTasks">0</strong></div>
+          <div class="stat"><span class="small">Dagboksinlägg</span><strong id="statLogs">0</strong></div>
+          <div class="stat"><span class="small">Klart</span><strong id="statDone">0</strong></div>
         </div>
-        <div id="fileList"></div>
-      </div>
-      <div class="card">
-        <h2>Testdata</h2>
-        <div class="row wrap">
-          <button class="btn secondary small" onclick="seedDemo(true)">Återställ demo</button>
-          <button class="btn danger small" onclick="clearData()">Rensa allt</button>
-          <button class="btn secondary small" onclick="logout()">Logga ut</button>
+        <div class="section-title"><h2>Senaste projekt</h2></div>
+        <div id="homeProjects" class="list"></div>
+      </section>
+
+      <section id="projects" class="screen">
+        <div class="section-title"><h1>Projekt</h1><button class="secondary" id="newProjectBtn">+ Nytt</button></div>
+        <div id="projectForm" class="card hidden">
+          <h2>Nytt projekt</h2>
+          <label>Projektnamn</label><input id="projectName" placeholder="T.ex. Villa Andersson">
+          <label>Adress</label><input id="projectAddress" placeholder="Byggvägen 12">
+          <label>Kund</label><input id="projectCustomer" placeholder="Kundens namn">
+          <button class="primary" id="saveProjectBtn">Spara projekt</button>
         </div>
-      </div>
+        <div id="projectList" class="list"></div>
+      </section>
+
+      <section id="tasks" class="screen">
+        <div class="section-title"><h1>Uppgifter</h1><button class="secondary" id="newTaskBtn">+ Ny</button></div>
+        <div id="taskForm" class="card hidden">
+          <h2>Ny uppgift</h2>
+          <label>Uppgift</label><input id="taskTitle" placeholder="T.ex. Montera innervägg">
+          <label>Projekt</label><select id="taskProject"></select>
+          <label>Ansvarig</label><input id="taskOwner" placeholder="Namn">
+          <button class="primary" id="saveTaskBtn">Spara uppgift</button>
+        </div>
+        <div id="taskList" class="list"></div>
+      </section>
+
+      <section id="logs" class="screen">
+        <div class="section-title"><h1>Dagbok</h1><button class="secondary" id="newLogBtn">+ Nytt</button></div>
+        <div id="logForm" class="card hidden">
+          <h2>Nytt dagboksinlägg</h2>
+          <label>Projekt</label><select id="logProject"></select>
+          <label>Vad har gjorts?</label><textarea id="logText" placeholder="Beskriv dagens arbete..."></textarea>
+          <button class="primary" id="saveLogBtn">Spara inlägg</button>
+        </div>
+        <div id="logList" class="list"></div>
+      </section>
+
+      <section id="more" class="screen">
+        <h1>Mer</h1>
+        <div class="card">
+          <h2>Testversion</h2>
+          <p>ByggFlow sparar just nu projekt, uppgifter och dagbok lokalt på den här enheten.</p>
+          <div class="toolbar">
+            <button class="secondary" id="seedBtn">Lägg in demo-data</button>
+            <button class="secondary danger" id="clearBtn">Rensa data</button>
+            <button class="secondary" id="logoutBtn">Logga ut</button>
+          </div>
+        </div>
+      </section>
     </section>
   </main>
-</div>
 
-<nav id="bottomNav" class="bottom" style="display:none">
-  <button class="nav active" data-screen="home"><span class="ico">⌂</span>Hem</button>
-  <button class="nav" data-screen="projects"><span class="ico">▣</span>Projekt</button>
-  <button class="nav" data-screen="tasks"><span class="ico">✓</span>Uppgifter</button>
-  <button class="nav" data-screen="diary"><span class="ico">✎</span>Dagbok</button>
-  <button class="nav" data-screen="more"><span class="ico">•••</span>Mer</button>
-</nav>
-
-<div id="projectModal" class="modal"><div class="sheet">
-  <div class="row between"><h2>Nytt projekt</h2><button class="btn secondary small" onclick="closeModal('projectModal')">Stäng</button></div>
-  <form id="projectForm" class="stack">
-    <label>Projektnamn<input name="name" required placeholder="Ex. Villa Andersson"></label>
-    <label>Kund<input name="customer" placeholder="Kundnamn"></label>
-    <label>Adress<input name="address" placeholder="Byggadress"></label>
-    <label>Status<select name="status"><option>Planering</option><option selected>Pågående</option><option>Klart</option></select></label>
-    <button class="btn">Skapa projekt</button>
-  </form>
-</div></div>
-
-<div id="taskModal" class="modal"><div class="sheet">
-  <div class="row between"><h2>Ny uppgift</h2><button class="btn secondary small" onclick="closeModal('taskModal')">Stäng</button></div>
-  <form id="taskForm" class="stack">
-    <label>Uppgift<input name="title" required placeholder="Ex. Montera gips"></label>
-    <label>Projekt<select name="project" id="taskProject"></select></label>
-    <label>Ansvarig<input name="assignee" placeholder="Namn"></label>
-    <label>Datum<input type="date" name="date"></label>
-    <button class="btn">Lägg till uppgift</button>
-  </form>
-</div></div>
-
-<div id="diaryModal" class="modal"><div class="sheet">
-  <div class="row between"><h2>Nytt dagboksinlägg</h2><button class="btn secondary small" onclick="closeModal('diaryModal')">Stäng</button></div>
-  <form id="diaryForm" class="stack">
-    <label>Projekt<select name="project" id="diaryProject"></select></label>
-    <label>Datum<input type="date" name="date" id="diaryDate"></label>
-    <label>Anteckning<textarea name="text" required placeholder="Vad har hänt på bygget idag?"></textarea></label>
-    <button class="btn">Spara inlägg</button>
-  </form>
-</div></div>
-
-<div id="devModal" class="modal"><div class="sheet">
-  <div class="row between"><h2>Ny avvikelse</h2><button class="btn secondary small" onclick="closeModal('devModal')">Stäng</button></div>
-  <form id="devForm" class="stack">
-    <label>Rubrik<input name="title" required placeholder="Ex. Försenad leverans"></label>
-    <label>Projekt<select name="project" id="devProject"></select></label>
-    <label>Allvarlighetsgrad<select name="severity"><option>Låg</option><option selected>Medel</option><option>Hög</option></select></label>
-    <label>Beskrivning<textarea name="text" placeholder="Beskriv avvikelsen"></textarea></label>
-    <button class="btn">Registrera</button>
-  </form>
-</div></div>
+  <nav id="bottomNav" class="bottomnav hidden">
+    <div class="bottomnav-inner">
+      <button class="navbtn active" data-screen="home"><span class="ico">⌂</span>Hem</button>
+      <button class="navbtn" data-screen="projects"><span class="ico">▣</span>Projekt</button>
+      <button class="navbtn" data-screen="tasks"><span class="ico">✓</span>Uppgifter</button>
+      <button class="navbtn" data-screen="logs"><span class="ico">✎</span>Dagbok</button>
+      <button class="navbtn" data-screen="more"><span class="ico">•••</span>Mer</button>
+    </div>
+  </nav>
 
 <script>
-const KEY='byggflow_step2_v1';
-let data = null;
-try { data = JSON.parse(localStorage.getItem(KEY)||'null'); }
-catch(e) { localStorage.removeItem(KEY); data = null; }
+(() => {
+  const DEMO_EMAIL = "demo@byggflow.se";
+  const DEMO_PASSWORD = "demo123";
 
-function seedDemo(force=false){
-  if(data && !force) return;
-  data={
-    projects:[
-      {id:1,name:'Villa Andersson',customer:'Anna Andersson',address:'Björkvägen 12',status:'Pågående'},
-      {id:2,name:'Kontorsrenovering',customer:'Nord AB',address:'Industrigatan 8',status:'Planering'}
-    ],
-    tasks:[
-      {id:1,title:'Montera innervägg',project:1,assignee:'Erik',date:'2026-09-08',done:false},
-      {id:2,title:'Kontrollera leverans',project:1,assignee:'Sara',date:'2026-09-09',done:false},
-      {id:3,title:'Måttsättning plan 2',project:2,assignee:'Johan',date:'2026-09-10',done:true}
-    ],
-    diary:[{id:1,project:1,date:'2026-09-07',text:'Reglar på plats i vardagsrum. Material för gips levererat.'}],
-    deviations:[{id:1,title:'Försenad dörrleverans',project:1,severity:'Medel',text:'Leveransen är två dagar sen.'}],
-    files:[{id:1,name:'Ritning_plan1.pdf',project:1}]
+  const $ = (id) => document.getElementById(id);
+  const state = {
+    projects: JSON.parse(localStorage.getItem("byggflow_projects") || "[]"),
+    tasks: JSON.parse(localStorage.getItem("byggflow_tasks") || "[]"),
+    logs: JSON.parse(localStorage.getItem("byggflow_logs") || "[]")
   };
-  save();
-}
-function save(){localStorage.setItem(KEY,JSON.stringify(data));renderAll()}
-const $=s=>document.querySelector(s);
-const $$=s=>[...document.querySelectorAll(s)];
-function esc(v=''){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function projectName(id){return data.projects.find(p=>String(p.id)===String(id))?.name||'Utan projekt'}
-function uid(){return Date.now()+Math.floor(Math.random()*1000)}
-function statusClass(s){return s==='Klart'?'ok':s==='Planering'?'warn':''}
-function sevClass(s){return s==='Hög'?'bad':s==='Medel'?'warn':'ok'}
 
-function showScreen(id){
-  $$('.screen').forEach(x=>x.classList.remove('active'));
-  $('#'+id).classList.add('active');
-  $$('.nav').forEach(x=>x.classList.toggle('active',x.dataset.screen===id));
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-$$('.nav').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.screen)));
-
-function openModal(id){populateProjectSelects();$('#'+id).classList.add('open')}
-function closeModal(id){$('#'+id).classList.remove('open')}
-$$('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
-
-function enterApp(){
-  sessionStorage.setItem('bf_logged','1');
-  $('#bottomNav').style.display='grid';
-  showScreen('home');
-}
-$('#loginForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  const email=$('#loginEmail').value.trim().toLowerCase();
-  const pass=$('#loginPass').value.trim();
-  if(email==='demo@byggflow.se' && pass==='demo123'){
-    enterApp();
-  }else{
-    alert('Använd demo@byggflow.se och demo123');
+  function save(){
+    localStorage.setItem("byggflow_projects", JSON.stringify(state.projects));
+    localStorage.setItem("byggflow_tasks", JSON.stringify(state.tasks));
+    localStorage.setItem("byggflow_logs", JSON.stringify(state.logs));
   }
-});
-function logout(){sessionStorage.removeItem('bf_logged');$('#bottomNav').style.display='none';showScreen('login')}
-if(sessionStorage.getItem('bf_logged')==='1'){ enterApp(); }
 
-function populateProjectSelects(){
-  const opts=data.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
-  ['taskProject','diaryProject','devProject'].forEach(id=>$('#'+id).innerHTML=opts || '<option value="">Inga projekt</option>');
-  $('#diaryDate').value=new Date().toISOString().slice(0,10);
-}
+  function esc(s){
+    return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  }
 
-$('#projectForm').onsubmit=e=>{
-  e.preventDefault(); const f=new FormData(e.target);
-  data.projects.unshift({id:uid(),name:f.get('name'),customer:f.get('customer'),address:f.get('address'),status:f.get('status')});
-  e.target.reset(); closeModal('projectModal'); save(); showScreen('projects');
-};
-$('#taskForm').onsubmit=e=>{
-  e.preventDefault(); const f=new FormData(e.target);
-  data.tasks.unshift({id:uid(),title:f.get('title'),project:Number(f.get('project')),assignee:f.get('assignee'),date:f.get('date'),done:false});
-  e.target.reset(); closeModal('taskModal'); save(); showScreen('tasks');
-};
-$('#diaryForm').onsubmit=e=>{
-  e.preventDefault(); const f=new FormData(e.target);
-  data.diary.unshift({id:uid(),project:Number(f.get('project')),date:f.get('date'),text:f.get('text')});
-  e.target.reset(); closeModal('diaryModal'); save(); showScreen('diary');
-};
-$('#devForm').onsubmit=e=>{
-  e.preventDefault(); const f=new FormData(e.target);
-  data.deviations.unshift({id:uid(),title:f.get('title'),project:Number(f.get('project')),severity:f.get('severity'),text:f.get('text')});
-  e.target.reset(); closeModal('devModal'); save(); showScreen('more');
-};
+  function showApp(){
+    $("loginView").classList.add("hidden");
+    $("appView").classList.remove("hidden");
+    $("bottomNav").classList.remove("hidden");
+    $("headerSubtitle").textContent = "Testversion • sparar lokalt på enheten";
+    renderAll();
+  }
 
-function toggleTask(id){const t=data.tasks.find(x=>x.id===id); if(t){t.done=!t.done;save()}}
-function deleteProject(id){
-  if(!confirm('Ta bort projektet? Uppgifter och anteckningar ligger kvar men saknar projekt.')) return;
-  data.projects=data.projects.filter(p=>p.id!==id); save();
-}
-function deleteTask(id){data.tasks=data.tasks.filter(t=>t.id!==id);save()}
-function deleteDiary(id){data.diary=data.diary.filter(x=>x.id!==id);save()}
-function deleteDev(id){data.deviations=data.deviations.filter(x=>x.id!==id);save()}
-function deleteFile(id){data.files=data.files.filter(x=>x.id!==id);save()}
+  function showLogin(){
+    $("appView").classList.add("hidden");
+    $("bottomNav").classList.add("hidden");
+    $("loginView").classList.remove("hidden");
+    $("headerSubtitle").textContent = "Testversion • sparar lokalt på enheten";
+  }
 
-function saveFiles(){
-  const files=[...$('#fileInput').files];
-  if(!files.length) return alert('Välj minst en fil.');
-  const project=data.projects[0]?.id||null;
-  files.forEach(f=>data.files.unshift({id:uid(),name:f.name,project}));
-  $('#fileInput').value=''; save();
-}
+  $("loginForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = $("email").value.trim().toLowerCase();
+    const password = $("password").value;
+    if(email === DEMO_EMAIL && password === DEMO_PASSWORD){
+      sessionStorage.setItem("byggflow_logged_in", "1");
+      $("loginMsg").textContent = "Inloggning lyckades.";
+      $("loginMsg").className = "msg success";
+      showApp();
+    } else {
+      $("loginMsg").textContent = "Fel e-post eller lösenord. Använd demo@byggflow.se / demo123";
+      $("loginMsg").className = "msg error";
+    }
+  });
 
-function clearData(){
-  if(!confirm('Rensa all lokal testdata?')) return;
-  data={projects:[],tasks:[],diary:[],deviations:[],files:[]}; save();
-}
+  document.querySelectorAll(".navbtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      $(btn.dataset.screen).classList.add("active");
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  });
 
-function renderAll(){
-  $('#statProjects').textContent=data.projects.filter(p=>p.status!=='Klart').length;
-  $('#statTasks').textContent=data.tasks.filter(t=>!t.done).length;
-  $('#statDeviations').textContent=data.deviations.length;
+  $("newProjectBtn").onclick = () => $("projectForm").classList.toggle("hidden");
+  $("newTaskBtn").onclick = () => $("taskForm").classList.toggle("hidden");
+  $("newLogBtn").onclick = () => $("logForm").classList.toggle("hidden");
 
-  $('#homeProjects').innerHTML=data.projects.slice(0,3).map(p=>`
-    <div class="item"><div class="row between"><div><b>${esc(p.name)}</b><div class="muted">${esc(p.customer||p.address||'')}</div></div><span class="pill ${statusClass(p.status)}">${esc(p.status)}</span></div></div>
-  `).join('') || '<div class="empty">Inga projekt ännu.</div>';
+  $("saveProjectBtn").onclick = () => {
+    const name = $("projectName").value.trim();
+    if(!name) return alert("Skriv ett projektnamn.");
+    state.projects.unshift({
+      id: Date.now(),
+      name,
+      address: $("projectAddress").value.trim(),
+      customer: $("projectCustomer").value.trim()
+    });
+    $("projectName").value = ""; $("projectAddress").value = ""; $("projectCustomer").value = "";
+    $("projectForm").classList.add("hidden");
+    save(); renderAll();
+  };
 
-  const next=data.tasks.filter(t=>!t.done).sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999')).slice(0,4);
-  $('#homeTasks').innerHTML=next.map(t=>`<div class="item"><b>${esc(t.title)}</b><div class="muted">${esc(projectName(t.project))}${t.date?' • '+esc(t.date):''}</div></div>`).join('') || '<div class="empty">Inga öppna uppgifter.</div>';
+  $("saveTaskBtn").onclick = () => {
+    const title = $("taskTitle").value.trim();
+    if(!title) return alert("Skriv en uppgift.");
+    state.tasks.unshift({
+      id: Date.now(),
+      title,
+      projectId: Number($("taskProject").value || 0),
+      owner: $("taskOwner").value.trim(),
+      done: false
+    });
+    $("taskTitle").value = ""; $("taskOwner").value = "";
+    $("taskForm").classList.add("hidden");
+    save(); renderAll();
+  };
 
-  $('#projectList').innerHTML=data.projects.map(p=>`
-    <div class="project">
-      <div class="row between"><h3>${esc(p.name)}</h3><span class="pill ${statusClass(p.status)}">${esc(p.status)}</span></div>
-      <div class="muted">${esc(p.customer||'Ingen kund')}</div><div class="muted">${esc(p.address||'Ingen adress')}</div>
-      <div class="row" style="margin-top:12px"><button class="btn danger small" onclick="deleteProject(${p.id})">Ta bort</button></div>
-    </div>`).join('') || '<div class="card empty">Skapa ditt första projekt.</div>';
+  $("saveLogBtn").onclick = () => {
+    const text = $("logText").value.trim();
+    if(!text) return alert("Skriv vad som har gjorts.");
+    state.logs.unshift({
+      id: Date.now(),
+      projectId: Number($("logProject").value || 0),
+      text,
+      date: new Date().toLocaleDateString("sv-SE")
+    });
+    $("logText").value = "";
+    $("logForm").classList.add("hidden");
+    save(); renderAll();
+  };
 
-  $('#taskList').innerHTML=data.tasks.map(t=>`
-    <div class="item">
-      <div class="row between"><div class="${t.done?'taskdone':''}"><b>${esc(t.title)}</b><div class="muted">${esc(projectName(t.project))}${t.assignee?' • '+esc(t.assignee):''}${t.date?' • '+esc(t.date):''}</div></div>
-      <span class="pill ${t.done?'ok':''}">${t.done?'Klar':'Öppen'}</span></div>
-      <div class="row" style="margin-top:10px"><button class="btn small ${t.done?'secondary':''}" onclick="toggleTask(${t.id})">${t.done?'Ångra':'Markera klar'}</button><button class="btn danger small" onclick="deleteTask(${t.id})">Ta bort</button></div>
-    </div>`).join('') || '<div class="empty">Inga uppgifter ännu.</div>';
+  function projectName(id){
+    return state.projects.find(p => p.id === id)?.name || "Inget projekt valt";
+  }
 
-  $('#diaryList').innerHTML=data.diary.map(d=>`
-    <div class="card"><div class="row between"><b>${esc(projectName(d.project))}</b><span class="muted">${esc(d.date)}</span></div><p style="margin:10px 0 12px;white-space:pre-wrap">${esc(d.text)}</p><button class="btn danger small" onclick="deleteDiary(${d.id})">Ta bort</button></div>
-  `).join('') || '<div class="card empty">Inga dagboksinlägg ännu.</div>';
+  function renderAll(){
+    $("statProjects").textContent = state.projects.length;
+    $("statTasks").textContent = state.tasks.filter(t => !t.done).length;
+    $("statLogs").textContent = state.logs.length;
+    $("statDone").textContent = state.tasks.filter(t => t.done).length;
 
-  $('#devList').innerHTML=data.deviations.map(d=>`
-    <div class="item"><div class="row between"><div><b>${esc(d.title)}</b><div class="muted">${esc(projectName(d.project))}</div></div><span class="pill ${sevClass(d.severity)}">${esc(d.severity)}</span></div><div class="muted" style="margin-top:7px">${esc(d.text||'')}</div><button class="btn danger small" style="margin-top:10px" onclick="deleteDev(${d.id})">Ta bort</button></div>
-  `).join('') || '<div class="empty">Inga avvikelser registrerade.</div>';
+    const projectOptions = '<option value="0">Välj projekt</option>' +
+      state.projects.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join("");
+    $("taskProject").innerHTML = projectOptions;
+    $("logProject").innerHTML = projectOptions;
 
-  $('#fileList').innerHTML=data.files.map(f=>`
-    <div class="item row between"><div><b>${esc(f.name)}</b><div class="muted">${esc(projectName(f.project))}</div></div><button class="btn danger small" onclick="deleteFile(${f.id})">Ta bort</button></div>
-  `).join('') || '<div class="empty">Inga dokument ännu.</div>';
-  populateProjectSelects();
-}
-seedDemo(false);
-renderAll();
+    $("projectList").innerHTML = state.projects.length ? state.projects.map(p => `
+      <div class="item">
+        <div class="item-title">${esc(p.name)}</div>
+        <div class="item-meta">${esc(p.address || "Ingen adress")} • ${esc(p.customer || "Ingen kund")}</div>
+      </div>`).join("") : '<div class="empty">Inga projekt ännu.</div>';
+
+    $("homeProjects").innerHTML = state.projects.length ? state.projects.slice(0,3).map(p => `
+      <div class="item"><div class="item-title">${esc(p.name)}</div><div class="item-meta">${esc(p.address || "Ingen adress")}</div></div>
+    `).join("") : '<div class="empty">Skapa ditt första projekt under Projekt.</div>';
+
+    $("taskList").innerHTML = state.tasks.length ? state.tasks.map(t => `
+      <div class="item">
+        <div class="row">
+          <div>
+            <div class="item-title">${esc(t.title)}</div>
+            <div class="item-meta">${esc(projectName(t.projectId))}${t.owner ? " • " + esc(t.owner) : ""}</div>
+            <span class="badge">${t.done ? "Klar" : "Öppen"}</span>
+          </div>
+          <button class="secondary" onclick="window.toggleTask(${t.id})">${t.done ? "Ångra" : "Klart"}</button>
+        </div>
+      </div>`).join("") : '<div class="empty">Inga uppgifter ännu.</div>';
+
+    $("logList").innerHTML = state.logs.length ? state.logs.map(l => `
+      <div class="item">
+        <div class="item-title">${esc(projectName(l.projectId))}</div>
+        <div class="item-meta">${esc(l.date)}</div>
+        <p>${esc(l.text)}</p>
+      </div>`).join("") : '<div class="empty">Inga dagboksinlägg ännu.</div>';
+  }
+
+  window.toggleTask = (id) => {
+    const t = state.tasks.find(x => x.id === id);
+    if(t){ t.done = !t.done; save(); renderAll(); }
+  };
+
+  $("seedBtn").onclick = () => {
+    if(state.projects.length || state.tasks.length || state.logs.length){
+      if(!confirm("Det finns redan data. Vill du lägga till demo-data ändå?")) return;
+    }
+    const pid = Date.now();
+    state.projects.unshift({id:pid, name:"Villa Andersson", address:"Björkvägen 12", customer:"Anna Andersson"});
+    state.tasks.unshift(
+      {id:pid+1,title:"Montera innervägg",projectId:pid,owner:"Johan",done:false},
+      {id:pid+2,title:"Kontrollera materialleverans",projectId:pid,owner:"Mikael",done:true}
+    );
+    state.logs.unshift({id:pid+3,projectId:pid,text:"Regling påbörjad i vardagsrum. Material levererat enligt plan.",date:new Date().toLocaleDateString("sv-SE")});
+    save(); renderAll();
+  };
+
+  $("clearBtn").onclick = () => {
+    if(confirm("Vill du rensa all lokal ByggFlow-data?")){
+      state.projects=[]; state.tasks=[]; state.logs=[]; save(); renderAll();
+    }
+  };
+
+  $("logoutBtn").onclick = () => {
+    sessionStorage.removeItem("byggflow_logged_in");
+    showLogin();
+  };
+
+  if(sessionStorage.getItem("byggflow_logged_in") === "1") showApp();
+  else showLogin();
+})();
 </script>
 </body>
 </html>
