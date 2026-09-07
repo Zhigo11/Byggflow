@@ -88,6 +88,29 @@ function renderDetail(id){const p=state.projects.find(x=>x.id===id);if(!p)return
 function renderAll(){const opts='<option value="">Välj projekt</option>'+state.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");[taskProject,logProject,timeProject].forEach(x=>x.innerHTML=opts);timeDate.value=timeDate.value||new Date().toISOString().slice(0,10);statProjects.textContent=state.projects.length;statTasks.textContent=state.tasks.filter(t=>!t.done).length;statHours.textContent=hours(state.times.reduce((a,b)=>a+Number(b.hours||0),0));projectList.innerHTML=state.projects.length?state.projects.map(p=>`<div class="item project-link" onclick="openProject('${p.id}')"><h3>${esc(p.name)}</h3><span class="small">${esc(p.address||"")} • ${esc(p.customer||"")}</span><br><span class="badge">Öppna projekt</span></div>`).join(""):'<div class="empty">Inga projekt ännu.</div>';homeProjects.innerHTML=state.projects.length?state.projects.slice(0,3).map(p=>`<div class="item project-link" onclick="openProject('${p.id}')"><h3>${esc(p.name)}</h3><span class="small">${esc(p.address||"")}</span></div>`).join(""):'<div class="empty">Skapa ditt första projekt.</div>';taskList.innerHTML=state.tasks.length?state.tasks.map(t=>`<div class="item"><div class="row"><div><h3>${esc(t.title)}</h3><span class="small">${esc(pname(t.project_id))} • ${esc(t.assigned_to||"")}</span></div><button class="secondary" onclick="toggleTask('${t.id}')">${t.done?"Ångra":"Klart"}</button></div></div>`).join(""):'<div class="empty">Inga uppgifter.</div>';logList.innerHTML=state.logs.length?state.logs.map(l=>`<div class="item"><h3>${esc(pname(l.project_id))}</h3><p>${esc(l.text)}</p></div>`).join(""):'<div class="empty">Inga dagboksinlägg.</div>';timeList.innerHTML=state.times.length?state.times.map(t=>`<div class="item"><h3>${esc(t.person||"Okänd")} • ${hours(t.hours)} h</h3><span class="small">${esc(pname(t.project_id))} • ${esc(t.work_date||"")}</span></div>`).join(""):'<div class="empty">Ingen tid rapporterad.</div>'}
 logoutBtn.onclick=async()=>{await db.auth.signOut();currentUser=null;showLogin()};
 (async()=>{const {data:{session}}=await db.auth.getSession();if(session?.user){currentUser=session.user;await sync();showApp()}else showLogin()})();
+async function uploadProjectImage(file, projectId) {
+  if (!file || !currentUser || !projectId) return;
+
+  const fileName =
+    currentUser.id + "/" +
+    projectId + "/" +
+    Date.now() + "-" + file.name;
+
+  const { error } = await db.storage
+    .from("project-images")
+    .upload(fileName, file);
+
+  if (error) {
+    alert("Kunde inte ladda upp bilden: " + error.message);
+    return;
+  }
+
+  const { data } = db.storage
+    .from("project-images")
+    .getPublicUrl(fileName);
+
+  return data.publicUrl;
+}
 </script>
 </body>
 </html>
