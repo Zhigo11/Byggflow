@@ -63,7 +63,7 @@ const SUPABASE_URL="https://ctkxxxgvkvzjkcylwzgv.supabase.co";
 const SUPABASE_KEY="sb_publishable_aCe9PzzJcdTTLO0pQjspIQ_g3ZBtVBA";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id),state={projects:[],tasks:[],logs:[],times:[]};let currentUser=null,currentProjectId=null;
-const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 const hours=n=>(Math.round(Number(n||0)*100)/100).toString().replace(".",","),pname=id=>state.projects.find(p=>p.id===id)?.name||"Inget projekt valt";
 function showLogin(){loginView.classList.remove("hidden");appView.classList.add("hidden");bottomNav.classList.add("hidden")}
 function showApp(){loginView.classList.add("hidden");appView.classList.remove("hidden");bottomNav.classList.remove("hidden");userEmail.textContent=currentUser?.email||"";renderAll()}
