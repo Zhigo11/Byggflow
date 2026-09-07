@@ -86,7 +86,12 @@ saveTaskBtn.onclick=async()=>{if(!taskTitle.value.trim()||!taskProject.value)ret
 saveLogBtn.onclick=async()=>{if(!logText.value.trim()||!logProject.value)return alert("Fyll i dagbok och projekt.");const {error}=await db.from("diary_entries").insert({text:logText.value.trim(),project_id:logProject.value});if(error)return alert(error.message);logText.value="";logForm.classList.add("hidden");await sync()};
 saveTimeBtn.onclick=async()=>{const h=Number(timeHours.value);if(!timeProject.value||!h)return alert("Välj projekt och timmar.");const {error}=await db.from("time_entries").insert({project_id:timeProject.value,work_date:timeDate.value||new Date().toISOString().slice(0,10),hours:h,person:timePerson.value.trim(),note:timeNote.value.trim()});if(error)return alert(error.message);timeHours.value=timeNote.value="";await sync()};
 window.toggleTask=async id=>{const t=state.tasks.find(x=>x.id===id);if(!t)return;const {error}=await db.from("tasks").update({done:!t.done}).eq("id",id);if(error)return alert(error.message);await sync()};
-window.openProject=id=>{currentProjectId=id;renderDetail(id);screen("projectDetail")};
+window.openProject=id=>{
+  currentProjectId=id;
+  renderDetail(id);
+  screen("projectDetail");
+  setTimeout(()=>loadProjectImages(id),100);
+};
 
 function renderDetail(id){const p=state.projects.find(x=>x.id===id);if(!p)return;const tasks=state.tasks.filter(x=>x.project_id===id),logs=state.logs.filter(x=>x.project_id===id),times=state.times.filter(x=>x.project_id===id),total=times.reduce((a,b)=>a+Number(b.hours||0),0);projectDetailContent.innerHTML=`<div class="card"><h1>${esc(p.name)}</h1><p>${esc(p.address||"")}<br><b>Kund:</b> ${esc(p.customer||"-")}<br><b>Telefon:</b> ${esc(p.phone||"-")}</p></div><div class="grid"><div class="stat">Uppgifter<strong>${tasks.length}</strong></div><div class="stat">Klart<strong>${tasks.filter(t=>t.done).length}</strong></div><div class="stat">Timmar<strong>${hours(total)}</strong></div><div class="stat">Bilder<strong>0</strong></div></div><div class="section-title"><h2>Projektets uppgifter</h2></div><div class="list">${tasks.length?tasks.map(t=>`<div class="item"><div class="row"><div><h3>${esc(t.title)}</h3><span class="small">${esc(t.assigned_to||"Ej tilldelad")}</span></div><button class="secondary" onclick="toggleTask('${t.id}')">${t.done?"Ångra":"Klart"}</button></div></div>`).join(""):'<div class="empty">Inga uppgifter.</div>'}</div><div class="section-title"><h2>Dagbok</h2></div><div class="list">${logs.length?logs.map(l=>`<div class="item"><span class="small">${new Date(l.created_at).toLocaleDateString("sv-SE")}</span><p>${esc(l.text)}</p></div>`).join(""):'<div class="empty">Inga inlägg.</div>'}</div>`}
 
@@ -134,10 +139,73 @@ uploadImageBtn.onclick = async () => {
   const url = await uploadProjectImage(file, currentProjectId);
 
   if (url) {
-    imageMsg.textContent = "Bilden är uppladdad ✓";
-    projectImageInput.value = "";
+  imageMsg.textContent = "Bilden är uppladdad ✓";
+  projectImageInput.value = "";
+
+  await loadProjectImages(currentProjectId);
+}
+    
+  
   }
 };
+async function loadProjectImages(projectId) {
+  if (!currentUser || !projectId) return;
+
+  const folder = currentUser.id + "/" + projectId;
+
+  const { data: files, error } = await db.storage
+    .from("project-images")
+    .list(folder, {
+      limit: 100,
+      sortBy: { column: "created_at", order: "desc" }
+    });
+
+  if (error) {
+    console.error("Kunde inte hämta bilder:", error);
+    return;
+  }
+
+  let gallery = document.getElementById("projectImageGallery");
+
+  if (!gallery) {
+    gallery = document.createElement("div");
+    gallery.id = "projectImageGallery";
+    gallery.style.display = "grid";
+    gallery.style.gridTemplateColumns = "repeat(2, 1fr)";
+    gallery.style.gap = "10px";
+    gallery.style.marginTop = "15px";
+
+    imageMsg.insertAdjacentElement("afterend", gallery);
+  }
+
+  gallery.innerHTML = "";
+
+  if (!files || files.length === 0) {
+    gallery.innerHTML = "<p>Inga bilder ännu.</p>";
+    return;
+  }
+
+  files.forEach(file => {
+    const filePath = folder + "/" + file.name;
+
+    const { data } = db.storage
+      .from("project-images")
+      .getPublicUrl(filePath);
+
+    const img = document.createElement("img");
+    img.src = data.publicUrl;
+    img.alt = "Projektbild";
+    img.style.width = "100%";
+    img.style.aspectRatio = "1 / 1";
+    img.style.objectFit = "cover";
+    img.style.borderRadius = "12px";
+    img.style.cursor = "pointer";
+
+    img.onclick = () => window.open(data.publicUrl, "_blank");
+
+    gallery.appendChild(img);
+  });
+}
 </script>
 </body>
 </html>
